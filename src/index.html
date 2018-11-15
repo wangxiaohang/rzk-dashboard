@@ -5,13 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>任租客后台管理系统</title>
-  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <script src="../node_modules/vue/dist/vue.min.js"></script>
+  <script src="../node_modules/vue-router/dist/vue-router.min.js"></script>
+  <link rel="stylesheet" href="../node_modules/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="./main.css">
 </head>
 <body>
-  <div class="container">
-    
+  <div id="app">
+    <el-container>
+      <el-header>Header</el-header>
+      <el-container>
+        <el-aside width="200px">
+          <router-link v-for="(item,id) of menus" :key="id" :to="item.path">{{ item.label }}</router-link>
+        </el-aside>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
-  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="../node_modules//bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../node_modules/element-ui/lib/index.js"></script>
+  <script src="./main.js"></script>
 </body>
 </html>

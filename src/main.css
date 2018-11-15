@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.el-header {
+  line-height:60px;
+  background: #3C8DBC;
+}
+.el-aside {
+  background: #222D32;
+  min-height: calc(100vh - 60px);
+}
+.el-aside a {
+  display: block;
+  text-decoration: none;
+  color: #B8C7CE;
+  padding: 12px 5px 12px 15px;
+  box-sizing: border-box;
+  border-left: 3px solid transparent;
+}
+.el-aside a.router-link-active {
+  border-left-color: #3c8dbc;
+  color: #fff;
+  background: #2C3B41;
+}

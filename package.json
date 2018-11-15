@@ -9,7 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bootstrap": "^3.3.7",
-    "jquery": "^3.3.1"
+    "element-ui": "^2.4.9",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.1"
   }
 }
