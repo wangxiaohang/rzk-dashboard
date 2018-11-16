@@ -1,21 +1,61 @@
 Vue.use(VueRouter);
-// 组件
-var bannerContent = {template:'<div>banner content</div>'};
-var hotsiteContent = {template:'<div>hotsite content</div>'};
-var categoryContent = {template:'<div>category content</div>'};
-var proinfoContent = {template:'<div>product info content</div>'};
-var userContent = {template:'<div>user content</div>'};
 
-var routes = [
-  {path: '/', component: bannerContent},//redirect: '/banner'},
-  {path: '/banner', component: bannerContent},
-  {path: '/hotsite', component: hotsiteContent},
-  {path: '/category', component: categoryContent},
-  {path: '/proinfo', component: proinfoContent},
-  {path: '/user', component: userContent}
-]
 var router = new VueRouter({
-  routes: routes
+  routes: [
+    {
+      path: '/', 
+      redirect: '/banner'
+    },
+    {
+      path: '/banner', 
+      component: {
+        template:'#banner'
+      }
+    },
+    {
+      path: '/hotsite', 
+      component: {
+        template:'#hotsite'
+      }
+    },
+    {
+      path: '/category',
+      component: {
+        template:'#category'
+      }
+    },
+    {
+      path: '/proinfo', 
+      component: {
+        template:'#proinfo',
+        data: function(){
+          return {
+            addProduct: false,
+            poperWidth: '120px',
+            form: {
+              name: '',
+              region: '',
+              date1: '',
+              date2: '',
+              delivery: false,
+              type: [],
+              resource: '',
+              desc: ''
+            }
+
+          }
+        },
+        methods: {
+        }
+      }
+    },
+    {
+      path: '/user', 
+      component: {
+        template:'#user'
+      }
+    }
+  ]
 });
 
 new Vue({

@@ -3,6 +3,7 @@
   padding: 0;
 }
 .el-header {
+  color: #fff;
   line-height:60px;
   background: #3C8DBC;
 }
@@ -22,4 +23,8 @@
   border-left-color: #3c8dbc;
   color: #fff;
   background: #2C3B41;
+}
+
+.el-button {
+  float: right;
 }

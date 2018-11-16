@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>任租客后台管理系统</title>
-  <script src="../node_modules/vue/dist/vue.min.js"></script>
-  <script src="../node_modules/vue-router/dist/vue-router.min.js"></script>
+  <script src="../node_modules/vue/dist/vue.js"></script>
+  <script src="../node_modules/vue-router/dist/vue-router.js"></script>
   <link rel="stylesheet" href="../node_modules/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="./main.css">
 </head>
 <body>
   <div id="app">
     <el-container>
-      <el-header>Header</el-header>
+      <el-header>任租客后台管理系统</el-header>
       <el-container>
         <el-aside width="200px">
           <router-link v-for="(item,id) of menus" :key="id" :to="item.path">{{ item.label }}</router-link>
@@ -24,6 +24,53 @@
       </el-container>
     </el-container>
   </div>
+
+
+  <!-- 模版 -->
+  <script type="text/x-template" id="banner">
+    <div class="banner">
+      <el-button type="primary" icon="el-icon-plus">添加</el-button>
+    </div>
+  </script>
+  <script type="text/x-template" id="hotsite">
+    <div class="hotsite">
+      <el-button type="primary" icon="el-icon-plus">添加</el-button>
+    </div>
+  </script>
+  <script type="text/x-template" id="category">
+    <div class="category">
+      <el-button type="primary" icon="el-icon-plus">添加</el-button>
+    </div>
+  </script>
+  <script type="text/x-template" id="proinfo">
+    <div class="proinfo">
+      <el-button @click="addProduct = true" type="primary" icon="el-icon-plus">添加</el-button>
+      <el-dialog title="收货地址" :visible.sync="addProduct">
+          <el-form :model="form">
+            <el-form-item label="活动名称" :label-width="poperWidth">
+              <el-input v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="活动区域" :label-width="poperWidth">
+              <el-select v-model="form.region" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="addProduct = false">取 消</el-button>
+            <el-button type="primary" @click="addProduct = false">确 定</el-button>
+          </div>
+        </el-dialog>
+    </div>
+  </script>
+  <script type="text/x-template" id="user">
+    <div class="user">
+      <el-button type="primary" icon="el-icon-plus">添加</el-button>
+    </div>
+  </script>
+
+
   <script src="../node_modules/element-ui/lib/index.js"></script>
   <script src="./main.js"></script>
 </body>
