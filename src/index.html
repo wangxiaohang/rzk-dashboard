@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>任租客后台管理系统</title>
+  <script src="../node_modules/hydrogen-js-sdk/dist/Bmob-1.6.5.min.js"></script>
   <script src="../node_modules/vue/dist/vue.js"></script>
   <script src="../node_modules/vue-router/dist/vue-router.js"></script>
   <link rel="stylesheet" href="../node_modules/element-ui/lib/theme-chalk/index.css">
+  <script src="../node_modules/element-ui/lib/index.js"></script>
   <link rel="stylesheet" href="./main.css">
 </head>
 <body>
@@ -44,24 +46,61 @@
   </script>
   <script type="text/x-template" id="proinfo">
     <div class="proinfo">
-      <el-button @click="addProduct = true" type="primary" icon="el-icon-plus">添加</el-button>
-      <el-dialog title="收货地址" :visible.sync="addProduct">
-          <el-form :model="form">
-            <el-form-item label="活动名称" :label-width="poperWidth">
-              <el-input v-model="form.name" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="活动区域" :label-width="poperWidth">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="addProduct = false">取 消</el-button>
-            <el-button type="primary" @click="addProduct = false">确 定</el-button>
-          </div>
-        </el-dialog>
+      <!-- Form -->
+      <el-button type="primary" @click="dialogProVisible = true" icon="el-icon-plus" style="margin-bottom:10px;">添加</el-button>
+
+      <el-dialog title="新增商品信息" :visible.sync="dialogProVisible">
+        <el-form :model="newProduct">
+          <el-form-item label="商品名称" :label-width="formLabelWidth">
+            <el-input v-model="newProduct.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="价格" :label-width="formLabelWidth">
+            <el-input type="number" v-model="newProduct.price" autocomplete="off">
+              <template slot="prepend">￥</template>
+              <template slot="append">/天</template>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="图片" :label-width="formLabelWidth">
+            <el-input v-model="newProduct.img" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="分类" :label-width="formLabelWidth">
+            <el-select v-model="newProduct.category" placeholder="请选择商品分类">
+              <el-option label="热租商品" value="0"></el-option>
+              <el-option label="电玩娱乐" value="1"></el-option>
+              <el-option label="办公用品" value="2"></el-option>
+              <el-option label="智能生活" value="3"></el-option>
+              <el-option label="品牌手机" value="4"></el-option>
+              <el-option label="3C数码" value="5"></el-option>
+              <el-option label="居家日常" value="6"></el-option>
+              <el-option label="生活家电" value="7"></el-option>
+              <el-option label="儿童玩具" value="8"></el-option>
+              <el-option label="户外活动" value="9"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer" style="height:40px">
+          <el-button @click="dialogProVisible = false" style="margin-left:10px">取 消</el-button>
+          <el-button type="primary" @click="addProduct()">确 定</el-button>
+        </div>
+      </el-dialog>
+
+      <!-- table -->
+      <el-table :data="products" style="width:100%" border stripe>
+          <el-table-column prop="id" label="商品id"></el-table-column>
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="img" label="图片"></el-table-column>
+        <el-table-column prop="price" label="价格"></el-table-column>
+        <el-table-column prop="cate" label="所属分类"></el-table-column>
+        <el-table-column prop="num" label="被租次数"></el-table-column>
+        <el-table-column prop="state" label="租用状态"></el-table-column>
+        <el-table-column prop="userid" label="租户id"></el-table-column>
+        <el-table-column label="操作" width="95">
+          <template slot-scope="scope">
+            <el-button @click="operatePro(scope.row,1)" style="margin-left:10px" type="text" size="small">删除</el-button>
+            <el-button @click="operatePro(scope.row,0)" type="text" size="small">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </script>
   <script type="text/x-template" id="user">
@@ -71,7 +110,6 @@
   </script>
 
 
-  <script src="../node_modules/element-ui/lib/index.js"></script>
   <script src="./main.js"></script>
 </body>
 </html>

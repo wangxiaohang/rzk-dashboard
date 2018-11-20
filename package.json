@@ -9,7 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "element-ui": "^2.4.9",
+    "element-ui": "^2.4.10",
+    "hydrogen-js-sdk": "^1.6.5",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1"
   }
