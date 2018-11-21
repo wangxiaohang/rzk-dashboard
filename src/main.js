@@ -2,20 +2,40 @@ Vue.use(VueRouter);
 
 Bmob.initialize("bd871ea12dc290abce3d439aa8cd12aa","5c7a9c2c9b82387a615d8a674e1ebc78");
 
+var temp = {
+  products:[]
+};
 var sql = {
+  queries: {
+    productsQquery: Bmob.Query("products"),
+  },  
+  addingProductFlag: false,
   addProduct: function(info){
-    const query = Bmob.Query('products');
-    query.set("name",info.name);
-    query.set("img",info.img);
-    query.set("price","￥"+info.price+"/天");
-    query.set("category",info.category);
-    query.set("status",0);
-    query.save().then(res => {
+    if(sql.addingProductFlag){
+      alert("正在添加，请稍后");
+      return;
+    };
+    sql.addingProductFlag = true;
+    sql.queries.productsQquery.set("name",info.name);
+    sql.queries.productsQquery.set("img",info.img);
+    sql.queries.productsQquery.set("price","￥"+info.price+"/天");
+    sql.queries.productsQquery.set("category",info.category);
+    sql.queries.productsQquery.set("status",0);
+    sql.queries.productsQquery.save().then(res => {
       console.log(info.name+"：保存成功");
+      sql.addingProductFlag = false;
     }).catch(err => {
       console.log(info.name+"：保存失败");
       console.log(err);
+      sql.addingProductFlag = false;
     })
+  },
+  getProducts: function(fn){
+    console.log("开始获取商品数据");
+    sql.queries.productsQquery.find().then(res => {
+      console.log("获取商品数据成功");
+      fn && fn(res);
+    });
   }
 };
 
@@ -56,24 +76,71 @@ var router = new VueRouter({
               img: '',
               category: ''
             },
+            newProductDetail: {
+              des: '',
+              email: {
+                post:'',
+                back:'',
+                from:''
+              },
+              prices: [{
+                days: '',
+                price: ''
+              }],
+              cash: '',
+              config: [],
+              info: [],
+              params: [{
+                k: '',
+                v: ''
+              }]
+            },
             formLabelWidth: '80px',
-            products: [
-              {
-                id: '0',
-                img: '123',
-                name: '抱枕',
-                price: '￥10/天',
-                cate: '热租商品',
-                num: '12',
-                state: '未租',
-                userid: '-'
-              }
-            ]
+            products: null,
           }
         },
+        created: function(){
+          this.refreshProducts();
+        },
         methods: {
+          addPrices: function(){
+            this.newProductDetail.prices.push({
+              days: '',
+              price: ''
+            })
+          },
+          addParams: function(){
+            this.newProductDetail.params.push({
+              k:'',
+              v:''
+            })
+          },
+          addConfig: function(){
+            this.newProductDetail.config.push('');
+          },
+          addInfo: function(){
+            this.newProductDetail.info.push('');
+          },
           operatePro: function(row,flag){
-            console.log(flag);
+            switch(flag){
+              case 2:
+                // 详情
+                break;
+              case 1:
+                // 删除
+                break;
+              case 0:
+                // 编辑
+                console.log(row);
+                this.newProduct.name = row.name;
+                this.newProduct.price = row.price;
+                this.newProduct.img = row.img;
+                this.newProduct.category = row.category;
+                sql.getProductDetailOf(row.id,function(res){
+
+                });
+                break;
+            }
           },
           addProduct: function(){
             if(this.newProduct.name.length>0 && this.newProduct.price.length>0 && this.newProduct.img.length>0 && this.newProduct.category.length>0){
@@ -114,6 +181,14 @@ var router = new VueRouter({
           },
           clearNewProduct: function(){
             this.newProduct.name = this.newProduct.price = this.newProduct.img = this.newProduct.category = '';
+          },
+          refreshProducts: function(){
+            var that = this;
+            this.products = null;
+            sql.getProducts(function(res){
+              console.log(res);
+              that.products = res;
+            });
           }
         }
       }

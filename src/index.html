@@ -48,8 +48,11 @@
     <div class="proinfo">
       <!-- Form -->
       <el-button type="primary" @click="dialogProVisible = true" icon="el-icon-plus" style="margin-bottom:10px;">添加</el-button>
+      <el-button type="primary" @click="refreshProducts()" icon="el-icon-refresh" style="margin-bottom:10px;margin-right:10px;">刷新</el-button>
 
-      <el-dialog title="新增商品信息" :visible.sync="dialogProVisible">
+      <el-dialog title="商品信息" :visible.sync="dialogProVisible">
+        <!-- 基本信息 -->
+        <h4>----基本信息----</h4><br/>
         <el-form :model="newProduct">
           <el-form-item label="商品名称" :label-width="formLabelWidth">
             <el-input v-model="newProduct.name" autocomplete="off"></el-input>
@@ -78,6 +81,71 @@
             </el-select>
           </el-form-item>
         </el-form>
+        <!-- 详情 -->
+        <h4>----详细信息----</h4><br/>
+        <el-form :model="newProductDetail">
+          <el-form-item label="描述" :label-width="formLabelWidth">
+            <el-input v-model="newProductDetail.des" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="寄出" :label-width="formLabelWidth">
+            <el-input v-model="newProductDetail.email.post" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="寄回" :label-width="formLabelWidth">
+            <el-input v-model="newProductDetail.email.back" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="发货地" :label-width="formLabelWidth">
+            <el-input v-model="newProductDetail.email.from" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="押金" :label-width="formLabelWidth">
+            <el-input v-model="newProductDetail.cash" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="分级价格" :label-width="formLabelWidth" v-for="(pri,id) of newProductDetail.prices" :key="id">
+            <el-col :span="11">
+              <el-form-item>
+                  <el-input type="number" v-model="newProductDetail.prices[id].days" autocomplete="off">                    
+                    <template slot="append">天</template>
+                  </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col class="line" :span="2">：</el-col>
+            <el-col :span="11">
+              <el-form-item>                
+                <el-input type="number" v-model="newProductDetail.prices[id].price" autocomplete="off">                     
+                  <template slot="prepend">￥</template>     
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="addPrices()" icon="el-icon-plus" plain>添加价格等级</el-button>
+          </el-form-item>
+          
+          <el-form-item label="配置信息" :label-width="formLabelWidth">
+              <el-input v-for="(pri,id) of newProductDetail.config" :key="id" v-model="newProductDetail.config[id]" autocomplete="off"></el-input>
+              <el-button @click="addConfig()" icon="el-icon-plus" plain>添加配置信息</el-button>
+          </el-form-item>
+          
+          <el-form-item label="商品信息" :label-width="formLabelWidth">
+            <el-input v-for="(pri,id) of newProductDetail.info" :key="id" v-model="newProductDetail.info[id]" autocomplete="off"></el-input>
+            <el-button @click="addInfo()" icon="el-icon-plus" plain>添加图片</el-button>
+          </el-form-item>
+          <el-form-item :label-width="formLabelWidth" v-for="item of newProductDetail.params" :key="item.id" label="商品参数">   
+              <el-col :span="11">
+                <el-form-item>
+                    <el-input v-model="item.k" autocomplete="off" placeholder="参数名"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col class="line" :span="2">:</el-col>
+              <el-col :span="11">
+                <el-form-item>                
+                  <el-input v-model="item.v" autocomplete="off" placeholder="参数值"></el-input>
+                </el-form-item>
+              </el-col>
+          </el-form-item>
+          <el-button @click="addParams()" icon="el-icon-plus" plain>添加商品参数</el-button>
+        </el-form>
+        <div style="clear:both"></div>
+        
         <div slot="footer" class="dialog-footer" style="height:40px">
           <el-button @click="dialogProVisible = false" style="margin-left:10px">取 消</el-button>
           <el-button type="primary" @click="addProduct()">确 定</el-button>
@@ -86,18 +154,20 @@
 
       <!-- table -->
       <el-table :data="products" style="width:100%" border stripe>
-          <el-table-column prop="id" label="商品id"></el-table-column>
+        <el-table-column prop="id" label="商品id"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
-        <el-table-column prop="img" label="图片"></el-table-column>
+        <el-table-column prop="img" label="图片">
+          <template slot-scope="scope">
+            <img :src="scope.row.img" style="width:50px;height:50px;" />
+          </template>
+        </el-table-column>
         <el-table-column prop="price" label="价格"></el-table-column>
-        <el-table-column prop="cate" label="所属分类"></el-table-column>
-        <el-table-column prop="num" label="被租次数"></el-table-column>
-        <el-table-column prop="state" label="租用状态"></el-table-column>
-        <el-table-column prop="userid" label="租户id"></el-table-column>
-        <el-table-column label="操作" width="95">
+        <el-table-column prop="category" label="所属分类"></el-table-column>
+        <el-table-column label="操作" width="130">
           <template slot-scope="scope">
             <el-button @click="operatePro(scope.row,1)" style="margin-left:10px" type="text" size="small">删除</el-button>
-            <el-button @click="operatePro(scope.row,0)" type="text" size="small">编辑</el-button>
+            <el-button @click="operatePro(scope.row,0)" style="margin-left:10px" type="text" size="small">编辑</el-button>
+            <el-button @click="operatePro(scope.row,2)" style="margin-left:10px" type="text" size="small">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
